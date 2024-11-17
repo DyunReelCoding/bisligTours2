@@ -29,6 +29,7 @@
 				</ul>
 				<div class="clearfix"></div>
 			</div>
+
 		</div>
 		<!-- End top-header -->
 
@@ -49,6 +50,7 @@
 			</div>
 		</div>
 		<!-- End header -->
+
 
 		<!-- Start footer section -->
 		<div class="footer-btm wow fadeInLeft animated" data-wow-delay=".5s">
@@ -83,11 +85,13 @@
 								</ul>
 							</nav>
 
+
 						</div><!-- /.navbar-collapse -->
+
 						<div class="bg-main1">
 							<div class="content">
 								<h1>Welcome to Bislig Tours</h1>
-								<p>Discover the beauty of Tinuy-an Falls!</p>
+								<p>Discover the beauty of BISLIG CITY!</p>
 							</div>
 						</div>
 					</nav>
@@ -98,4 +102,18 @@
 		<!-- End footer-btm -->
 	</div>
 	<!-- End bg-main -->
+	<!-- Add Chatbot Script Below -->
+	<script>
+		window.embeddedChatbotConfig = {
+			chatbotId: "FcKFk-QksFvzEMBKJTTOi",
+			domain: "www.chatbase.co"
+		}
+	</script>
+	<script
+		src="https://www.chatbase.co/embed.min.js"
+		chatbotId="FcKFk-QksFvzEMBKJTTOi"
+		domain="www.chatbase.co"
+		async>
+	</script>
+
 <?php } ?>

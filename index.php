@@ -2,7 +2,11 @@
 session_start();
 error_reporting(0);
 include('includes/config.php');
+
+
 ?>
+
+
 <!DOCTYPE HTML>
 <html>
 
@@ -19,12 +23,17 @@ include('includes/config.php');
 	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 	<link href="css/font-awesome.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
+
 	<!-- Custom Theme files -->
 	<script src="js/jquery-1.12.0.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<!--animate-->
 	<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
 	<script src="js/wow.min.js"></script>
+
 
 	<script>
 		new WOW().init();
