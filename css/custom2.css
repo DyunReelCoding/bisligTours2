@@ -1,0 +1,60 @@
+.bg-main {
+    background: url(../images/background.png) no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+    min-height: 430px;
+}
+
+/* Move the h1 to the top */
+.bg-main1 h1 {
+    font-size: 70px;      /* Title size */
+    font-weight: bold;    /* Make the text bold */
+    color: white;         /* Change text color to white */
+    margin-bottom: 10px;  
+    margin-top: 50px;     /* Space from top */
+    text-align: center;   /* Center the text */
+}
+
+/* Style for the container */
+.bg-main1 {
+    text-align: center;
+    font-size: 30px;  /* Adjust container text size if needed */
+    color: black;     /* Color for other text within the container */
+    color: white;  
+}
+
+
+/* Remove background from text containers within .bg-main */
+.bg-main .top-header,
+.bg-main .header,
+.bg-main .footer-btm {
+    background: none !important;  /* Removes any background */
+}
+
+/* Optional: If any text itself has a background, you can reset that too */
+.bg-main .top-header .tp-hd-rgt,
+.bg-main .header .logo,
+.bg-main .footer-btm .navigation {
+    background: none !important;  /* Removes background from these specific elements */
+}
+
+/* Optional: If there are any specific background colors on links */
+.bg-main .top-header a,
+.bg-main .header a,
+.bg-main .footer-btm a {
+    background: none !important;  /* Removes background from links */
+}
+.navbar-default {
+    background-color: transparent !important;
+}
+.btn-primary.btn {
+    margin-bottom: 40px;
+}
+.footer {
+    margin-top: 270px;
+}
+ 
+

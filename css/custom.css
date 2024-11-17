@@ -1,0 +1,17 @@
+.bg-main {
+    background: url(../images/Tinuy-an_Falls,_April_2011.jpg) no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+    min-height: 430px;
+}
+
+.bg-main h1 {
+    font-size: 50px;
+    margin-bottom: 40px;
+    padding: 4em 0 0;
+    text-align: center;
+    color: white;
+}
