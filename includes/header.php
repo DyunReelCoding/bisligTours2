@@ -1,9 +1,8 @@
 <?php if ($_SESSION['login']) { ?>
 
-	<div class="top-header">
+	<div class="top-header login-header">
 		<div class="container">
 			<ul class="tp-hd-lft wow fadeInLeft animated" data-wow-delay=".5s">
-				<li class="hm"><a href="index.html"><i class="fa fa-home"></i></a></li>
 				<li class="prnt"><a href="profile.php">My Profile</a></li>
 				<li class="prnt"><a href="change-password.php">Change Password</a></li>
 				<li class="prnt"><a href="tour-history.php">My Tour History</a></li>
@@ -37,7 +36,11 @@
 		<div class="header">
 			<div class="container">
 				<div class="logo wow fadeInDown animated" data-wow-delay=".5s">
-					<a href="index.php">BISLIG <span>TOURS</span></a>
+					<a href="index.php">
+						<!-- Logo image div on the left side -->
+						<div class="logo-img"></div>
+						BISLIG TOURS
+					</a>
 				</div>
 				<div class="lock fadeInDown animated" data-wow-delay=".5s">
 					<!-- <li><i class="fa fa-lock"></i></li> -->
@@ -104,16 +107,10 @@
 	<!-- End bg-main -->
 	<!-- Add Chatbot Script Below -->
 	<script>
-		window.embeddedChatbotConfig = {
-			chatbotId: "FcKFk-QksFvzEMBKJTTOi",
-			domain: "www.chatbase.co"
+		window.chtlConfig = {
+			chatbotId: "8619528422"
 		}
 	</script>
-	<script
-		src="https://www.chatbase.co/embed.min.js"
-		chatbotId="FcKFk-QksFvzEMBKJTTOi"
-		domain="www.chatbase.co"
-		async>
-	</script>
+	<script async data-id="8619528422" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
 
 <?php } ?>

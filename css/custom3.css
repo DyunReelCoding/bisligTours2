@@ -7,6 +7,15 @@
     -moz-background-size: cover;
     min-height: 430px;
 }
+.login-header{
+    background: url(../images/background.png) no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    -moz-background-size: cover;
+    min-height: 10px;
+}
 
 /* Move the h1 to the top */
 .bg-main1 h1 {
@@ -58,3 +67,24 @@
 }
  
 
+.logo a {
+    color: #34ad00;
+    letter-spacing: 1px;
+    font-size: 2em;
+    font-weight: 400;
+    display: block;
+    text-decoration: none;
+    font-family: 'Oswald', sans-serif;
+}
+
+/* Logo image as background */
+/* .logo-img {
+    width: 50px;
+    height: 50px; 
+    background-image: url(../images/logo.png); 
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-position: center;
+   margin-left: 10px;
+   margin-bottom: 10px;
+} */
