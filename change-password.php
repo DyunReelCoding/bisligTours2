@@ -39,7 +39,7 @@ if (strlen($_SESSION['login']) == 0) {
 		<script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 		<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
 		<link href="css/style.css" rel='stylesheet' type='text/css' />
-		<link href="css/custom2.css" rel='stylesheet' type='text/css' />
+		<link href="css/custom3.css" rel='stylesheet' type='text/css' />
 		<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
 		<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
 		<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
