@@ -4,6 +4,7 @@
 		<div class="container">
 			<ul class="tp-hd-lft wow fadeInLeft animated" data-wow-delay=".5s">
 				<li class="prnt"><a href="profile.php">My Profile</a></li>
+				<li class="prnt"><a href="package-list.php">Tour Package</a></li>
 				<li class="prnt"><a href="change-password.php">Change Password</a></li>
 				<li class="prnt"><a href="tour-history.php">My Tour History</a></li>
 				<li class="prnt"><a href="issuetickets.php">Issue Tickets</a></li>
@@ -14,6 +15,12 @@
 				<li class="sigi"><a href="logout.php">/ Logout</a></li>
 			</ul>
 			<div class="clearfix"></div>
+			<script>
+				window.chtlConfig = {
+					chatbotId: "8619528422"
+				}
+			</script>
+			<script async data-id="8619528422" id="chatling-embed-script" type="text/javascript" src="https://chatling.ai/js/embed.js"></script>
 		</div>
 	</div><?php } else { ?>
 	<!-- Apply the bg-main class to the outer container -->

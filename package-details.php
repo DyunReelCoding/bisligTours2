@@ -8,16 +8,24 @@ if (isset($_POST['submit2'])) {
 	$fromdate = $_POST['fromdate'];
 	$todate = $_POST['todate'];
 	$comment = $_POST['comment'];
+	$hotelId = $_POST['hotelId'];  // Capture the selected hotel ID
+	$hotelPrice = $_POST['hotelPrice'];  // Capture the selected hotel price
 	$status = 0;
-	$sql = "INSERT INTO tblbooking(PackageId,UserEmail,FromDate,ToDate,Comment,status) VALUES(:pid,:useremail,:fromdate,:todate,:comment,:status)";
+
+	// Prepare the SQL query to insert booking details
+	$sql = "INSERT INTO tblbooking(PackageId, UserEmail, FromDate, ToDate, Comment, HotelId, HotelPrice, status) 
+            VALUES(:pid, :useremail, :fromdate, :todate, :comment, :hotelId, :hotelPrice, :status)";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':pid', $pid, PDO::PARAM_STR);
 	$query->bindParam(':useremail', $useremail, PDO::PARAM_STR);
 	$query->bindParam(':fromdate', $fromdate, PDO::PARAM_STR);
 	$query->bindParam(':todate', $todate, PDO::PARAM_STR);
 	$query->bindParam(':comment', $comment, PDO::PARAM_STR);
+	$query->bindParam(':hotelId', $hotelId, PDO::PARAM_INT);
+	$query->bindParam(':hotelPrice', $hotelPrice, PDO::PARAM_STR);
 	$query->bindParam(':status', $status, PDO::PARAM_STR);
 	$query->execute();
+
 	$lastInsertId = $dbh->lastInsertId();
 	if ($lastInsertId) {
 		$msg = "Booked Successfully";
@@ -25,6 +33,7 @@ if (isset($_POST['submit2'])) {
 		$error = "Something went wrong. Please try again";
 	}
 }
+
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -47,6 +56,7 @@ if (isset($_POST['submit2'])) {
 	<!--animate-->
 	<link href="css/animate.css" rel="stylesheet" type="text/css" media="all">
 	<script src="js/wow.min.js"></script>
+	<script src="js/package-details.js"></script>
 	<link rel="stylesheet" href="css/jquery-ui.css" />
 	<script>
 		new WOW().init();
@@ -108,7 +118,7 @@ if (isset($_POST['submit2'])) {
 								<p class="dow">#PKG-<?php echo htmlentities($result->PackageId); ?></p>
 								<p><b>Package Type :</b> <?php echo htmlentities($result->PackageType); ?></p>
 								<p><b>Package Location :</b> <?php echo htmlentities($result->PackageLocation); ?></p>
-								<p><b>Features</b> <?php echo htmlentities($result->PackageFetures); ?></p>
+								<p><b>Features :</b> <?php echo htmlentities($result->PackageFetures); ?></p>
 								<div class="ban-bottom">
 									<div class="bnr-right">
 										<label class="inputLabel">From</label>
@@ -119,12 +129,67 @@ if (isset($_POST['submit2'])) {
 										<input class="date" id="datepicker1" type="text" placeholder="dd-mm-yyyy" name="todate" required="">
 									</div>
 								</div>
+								<div class="bnr-right">
+									<br>
+									<label class="inputLabel">Number of Customers</label>
+									<input type="number" id="numCustomers" placeholder="Enter number of customers" min="1" required="">
+									<button type="button" onclick="generateCustomerInputs()">Confirm</button>
+								</div>
 								<div class="clearfix"></div>
+								<br>
+								<div id="customerInputs"></div>
+								<br>
+								<div class="accordion" id="accordionExample">
+									<!-- Hotel Selection Accordion -->
+									<div class="accordion-item">
+										<?php
+										// Fetch the hotels from the database
+										$sql = "SELECT * FROM tblhotels";
+										$query = $dbh->prepare($sql);
+										$query->execute();
+										$hotels = $query->fetchAll(PDO::FETCH_OBJ);
+										?>
+										<label class="inputLabel">Select Hotel</label>
+										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+											<div class="accordion-body">
+												<select name="hotel" class="form-control" id="hotelSelect" onchange="updateHotelPrice()">
+													<option value="" disabled selected>Select a Hotel</option> <!-- Placeholder option -->
+													<?php foreach ($hotels as $hotel): ?>
+														<option value="<?php echo htmlentities($hotel->HotelId); ?>" data-price="<?php echo htmlentities($hotel->Price); ?>">
+															<?php echo htmlentities($hotel->HotelName); ?>
+														</option>
+													<?php endforeach; ?>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
+								<br>
+								<div class="accordion" id="accordionExample">
+									<!-- Hotel Selection Accordion -->
+									<div class="accordion-item">
+										<label class="inputLabel">Select Parking Spot</label>
+										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+											<div class="accordion-body">
+												<select name="hotel" class="form-control">
+													<option value="Hotel 1">Grand Ocean Resort</option>
+													<option value="Hotel 2">Mountain View Inn </option>
+													<option value="Hotel 3">Lakeside Retreat</option>
+													<option value="Hotel 4">City Center Hotel </option>
+													<option value="Hotel 4">Sunset Paradise Resort </option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div class="grand">
+									<input type="hidden" id="packagePrice" value="<?php echo htmlentities($result->PackagePrice); ?>">
 									<p>Grand Total</p>
-									<h3>PESO 800</h3>
+									<h3 id="grandTotal">PESO 0.00</h3> <!-- This will be updated dynamically -->
 								</div>
 							</div>
+							<input type="hidden" id="selectedHotelId" name="hotelId" value="">
+							<input type="hidden" id="selectedHotelPrice" name="hotelPrice" value="">
 							<h3>Package Details</h3>
 							<p style="padding-top: 1%"><?php echo htmlentities($result->PackageDetails); ?> </p>
 							<div class="clearfix"></div>
@@ -133,10 +198,9 @@ if (isset($_POST['submit2'])) {
 							<h2>Travels</h2>
 							<div class="selectroom-info animated wow fadeInUp animated" data-wow-duration="1200ms" data-wow-delay="500ms" style="visibility: visible; animation-duration: 1200ms; animation-delay: 500ms; animation-name: fadeInUp; margin-top: -70px">
 								<ul>
-
 									<li class="spe">
 										<label class="inputLabel">Comment</label>
-										<input class="special" type="text" name="comment" required="">
+										<input class="special" type="text" name="comment">
 									</li>
 									<?php if ($_SESSION['login']) { ?>
 										<li class="spe" align="center">
@@ -150,12 +214,10 @@ if (isset($_POST['submit2'])) {
 									<div class="clearfix"></div>
 								</ul>
 							</div>
-
 						</div>
 					</form>
 			<?php }
 			} ?>
-
 
 		</div>
 	</div>
@@ -170,6 +232,67 @@ if (isset($_POST['submit2'])) {
 		<!-- //signin -->
 		<!-- write us -->
 		<?php include('includes/write-us.php'); ?>
+
+		<script>
+			function updateHotelPrice() {
+				const hotelSelect = document.getElementById("hotelSelect");
+				const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+
+				// If the placeholder is selected, return early
+				if (selectedOption.value === "") {
+					return; // Do not update the hotel price if no hotel is selected
+				}
+
+				const hotelPrice = parseFloat(selectedOption.getAttribute("data-price"));
+
+				// Set hidden fields for hotel ID and price
+				document.getElementById("selectedHotelId").value = selectedOption.value;
+				document.getElementById("selectedHotelPrice").value = hotelPrice.toFixed(2);
+
+				// Update grand total calculation
+				const numCustomers = parseInt(document.getElementById("numCustomers").value);
+				const packagePrice = parseFloat(document.getElementById("packagePrice").value); // Get package price
+
+				// Calculate the total price with fixed hotel cost
+				const grandTotal = (packagePrice * numCustomers) + hotelPrice; // Hotel price is added only once
+				document.getElementById("grandTotal").innerText = "PESO " + grandTotal.toFixed(2);
+			}
+
+			function generateCustomerInputs() {
+				const container = document.getElementById("customerInputs");
+				const numCustomers = parseInt(document.getElementById("numCustomers").value);
+				const packagePrice = parseFloat(document.getElementById("packagePrice").value); // Get package price
+				const hotelSelect = document.getElementById("hotelSelect");
+				const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+
+				// If no hotel is selected, hotelPrice should be 0
+				const hotelPrice = selectedOption.value === "" ? 0 : parseFloat(selectedOption.getAttribute("data-price"));
+
+				// Clear previous inputs
+				container.innerHTML = "";
+
+				if (isNaN(numCustomers) || numCustomers <= 0) {
+					alert("Please enter a valid number of customers.");
+					return;
+				}
+
+				// Create customer inputs dynamically
+				for (let i = 1; i <= numCustomers; i++) {
+					const inputDiv = document.createElement("div");
+					inputDiv.className = "customer-input";
+					inputDiv.innerHTML =
+						`<label>Customer ${i} Name</label>
+						<input type="text" name="customer${i}Name" placeholder="Enter name of customer ${i}" required="">`;
+					container.appendChild(inputDiv);
+				}
+
+				// Calculate and update grand total
+				const grandTotal = (packagePrice * numCustomers) + hotelPrice; // Hotel price is added only once
+				document.getElementById("grandTotal").innerText = "PESO " + grandTotal.toFixed(2);
+			}
+		</script>
+
+
 </body>
 
 </html>
