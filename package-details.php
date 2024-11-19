@@ -39,7 +39,7 @@ if (isset($_POST['submit2'])) {
 <html>
 
 <head>
-	<title>TMS | Package Details</title>
+	<title>BISLIG TOURS | Package Details</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="applijewelleryion/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
@@ -108,7 +108,8 @@ if (isset($_POST['submit2'])) {
 			if ($query->rowCount() > 0) {
 				foreach ($results as $result) {	?>
 
-					<form name="book" method="post">
+					<form name="book" method="post" onsubmit="return validateForm()">
+
 						<div class="selectroom_top">
 							<div class="col-md-4 selectroom_left wow fadeInLeft animated" data-wow-delay=".5s">
 								<img src="admin/pacakgeimages/<?php echo htmlentities($result->PackageImage); ?>" class="img-responsive" alt="">
@@ -149,10 +150,11 @@ if (isset($_POST['submit2'])) {
 										$query->execute();
 										$hotels = $query->fetchAll(PDO::FETCH_OBJ);
 										?>
-										<label class="inputLabel">Select Hotel</label>
+										<label class="inputLabel">Select Hotel <span style="font-size: 0.9em; color: #777;">(Optional)</span></label>
 										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 											<div class="accordion-body">
 												<select name="hotel" class="form-control" id="hotelSelect" onchange="updateHotelPrice()">
+													<option value="">None</option>
 													<option value="" disabled selected>Select a Hotel</option> <!-- Placeholder option -->
 													<?php foreach ($hotels as $hotel): ?>
 														<option value="<?php echo htmlentities($hotel->HotelId); ?>" data-price="<?php echo htmlentities($hotel->Price); ?>">
@@ -166,22 +168,24 @@ if (isset($_POST['submit2'])) {
 								</div>
 								<br>
 								<div class="accordion" id="accordionExample">
-									<!-- Hotel Selection Accordion -->
+									<!-- Parking Spot Selection -->
 									<div class="accordion-item">
-										<label class="inputLabel">Select Parking Spot</label>
+										<label class="inputLabel">Select Parking Spot <span style="font-size: 0.9em; color: #777;">(Optional)</span></label>
 										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 											<div class="accordion-body">
-												<select name="hotel" class="form-control">
-													<option value="Hotel 1">Grand Ocean Resort</option>
-													<option value="Hotel 2">Mountain View Inn </option>
-													<option value="Hotel 3">Lakeside Retreat</option>
-													<option value="Hotel 4">City Center Hotel </option>
-													<option value="Hotel 4">Sunset Paradise Resort </option>
+												<select name="parking" class="form-control">
+													<option value="">None</option> <!-- No parking spot selected -->
+													<option value="1">Grand Ocean Resort</option>
+													<option value="2">Mountain View Inn</option>
+													<option value="3">Lakeside Retreat</option>
+													<option value="4">City Center Hotel</option>
+													<option value="5">Sunset Paradise Resort</option>
 												</select>
 											</div>
 										</div>
 									</div>
 								</div>
+
 								<div class="grand">
 									<input type="hidden" id="packagePrice" value="<?php echo htmlentities($result->PackagePrice); ?>">
 									<p>Grand Total</p>
@@ -294,5 +298,75 @@ if (isset($_POST['submit2'])) {
 
 
 </body>
+<script>
+	function validateForm() {
+		// Check if the Confirm button was clicked and fields were generated
+		const confirmButton = document.querySelector('button[onclick="generateCustomerInputs()"]');
+		const customerFieldsGenerated = document.querySelector('input[name="customer1Name"]'); // Replace with a representative field
+
+		if (confirmButton && !customerFieldsGenerated) {
+			alert("Please click the Confirm button to generate customer fields.");
+			return false;
+		}
+
+		// Validate the number of customers
+		const numCustomers = parseInt(document.getElementById("numCustomers").value);
+		if (isNaN(numCustomers) || numCustomers <= 0) {
+			alert("Please confirm the number of customers.");
+			return false;
+		}
+
+		// Validate customer name inputs
+		for (let i = 1; i <= numCustomers; i++) {
+			const customerInput = document.querySelector(`input[name="customer${i}Name"]`);
+			if (!customerInput || customerInput.value.trim() === "") {
+				alert(`Please fill out the name for Customer ${i}.`);
+				return false;
+			}
+		}
+
+		// Confirm hotel selection is properly populated
+		const hotelSelect = document.getElementById("hotelSelect");
+		const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+		const selectedHotelId = selectedOption.value;
+		const selectedHotelPrice = selectedOption.getAttribute("data-price");
+
+		document.getElementById("selectedHotelId").value = selectedHotelId || "";
+		document.getElementById("selectedHotelPrice").value = selectedHotelPrice || "0";
+
+		return true; // All checks passed
+	}
+</script>
+
+<!-- Add to the `<script>` section in your HTML -->
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const packagePrice = parseFloat(document.getElementById('packagePrice').value);
+		const grandTotalElement = document.getElementById('grandTotal');
+		const hotelSelect = document.getElementById('hotelSelect');
+		const parkingSelect = document.querySelector('select[name="parking"]');
+
+		const parkingSpotPrice = 500; // Fixed price for parking spot
+
+		// Function to calculate and update the grand total
+		function updateGrandTotal() {
+			const selectedHotelOption = hotelSelect.options[hotelSelect.selectedIndex];
+			const hotelPrice = selectedHotelOption.dataset.price ? parseFloat(selectedHotelOption.dataset.price) : 0;
+
+			const parkingSelected = parkingSelect.value !== ""; // Check if a parking spot is selected
+			const parkingPrice = parkingSelected ? parkingSpotPrice : 0;
+
+			const grandTotal = packagePrice + hotelPrice + parkingPrice;
+			grandTotalElement.textContent = `PESO ${grandTotal.toFixed(2)}`;
+		}
+
+		// Add event listeners to update the total dynamically
+		hotelSelect.addEventListener('change', updateGrandTotal);
+		parkingSelect.addEventListener('change', updateGrandTotal);
+	});
+</script>
+
+
+
 
 </html>
