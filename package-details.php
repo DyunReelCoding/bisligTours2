@@ -165,6 +165,7 @@ if (isset($_POST['submit2'])) {
 											</div>
 										</div>
 									</div>
+									<p id="hotelPrice" style="margin-top: 10px; font-weight: bold;">Selected Hotel Price: -</p>
 								</div>
 								<br>
 								<div class="accordion" id="accordionExample">
@@ -173,17 +174,18 @@ if (isset($_POST['submit2'])) {
 										<label class="inputLabel">Select Parking Spot <span style="font-size: 0.9em; color: #777;">(Optional)</span></label>
 										<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 											<div class="accordion-body">
-												<select name="parking" class="form-control">
+												<select name="parking" class="form-control" id="parkingSelect" onchange="updateParkingPrice()">
 													<option value="">None</option> <!-- No parking spot selected -->
-													<option value="1">Grand Ocean Resort</option>
-													<option value="2">Mountain View Inn</option>
-													<option value="3">Lakeside Retreat</option>
-													<option value="4">City Center Hotel</option>
-													<option value="5">Sunset Paradise Resort</option>
+													<option value="1" data-price="100.00">Grand Ocean Resort</option>
+													<option value="2" data-price="150.50">Mountain View Inn</option>
+													<option value="3" data-price="180.00">Lakeside Retreat</option>
+													<option value="4" data-price="220.00">City Center Hotel</option>
+													<option value="5" data-price="250.00">Sunset Paradise Resort</option>
 												</select>
 											</div>
 										</div>
 									</div>
+									<p id="parkingPrice" style="margin-top: 10px; font-weight: bold;">Selected Parking Price: -</p>
 								</div>
 
 								<div class="grand">
@@ -299,6 +301,20 @@ if (isset($_POST['submit2'])) {
 
 </body>
 <script>
+	function updateHotelPrice() {
+		const hotelSelect = document.getElementById("hotelSelect");
+		const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+		const price = selectedOption.getAttribute("data-price") || "-";
+		document.getElementById("hotelPrice").innerText = `Selected Hotel Price: ${price}`;
+	}
+
+	function updateParkingPrice() {
+		const parkingSelect = document.getElementById("parkingSelect");
+		const selectedOption = parkingSelect.options[parkingSelect.selectedIndex];
+		const price = selectedOption.getAttribute("data-price") || "-";
+		document.getElementById("parkingPrice").innerText = `Selected Parking Price: ${price}`;
+	}
+
 	function validateForm() {
 		// Check if the Confirm button was clicked and fields were generated
 		const confirmButton = document.querySelector('button[onclick="generateCustomerInputs()"]');
@@ -338,7 +354,7 @@ if (isset($_POST['submit2'])) {
 	}
 </script>
 
-<!-- Add to the `<script>` section in your HTML -->
+
 <script>
 	document.addEventListener("DOMContentLoaded", () => {
 		const packagePrice = parseFloat(document.getElementById('packagePrice').value);
@@ -346,16 +362,17 @@ if (isset($_POST['submit2'])) {
 		const hotelSelect = document.getElementById('hotelSelect');
 		const parkingSelect = document.querySelector('select[name="parking"]');
 
-		const parkingSpotPrice = 500; // Fixed price for parking spot
-
 		// Function to calculate and update the grand total
 		function updateGrandTotal() {
+			// Get selected hotel price
 			const selectedHotelOption = hotelSelect.options[hotelSelect.selectedIndex];
 			const hotelPrice = selectedHotelOption.dataset.price ? parseFloat(selectedHotelOption.dataset.price) : 0;
 
-			const parkingSelected = parkingSelect.value !== ""; // Check if a parking spot is selected
-			const parkingPrice = parkingSelected ? parkingSpotPrice : 0;
+			// Get the selected parking spot price (parkingSelect value can be used to get the price dynamically)
+			const selectedParkingOption = parkingSelect.options[parkingSelect.selectedIndex];
+			const parkingPrice = selectedParkingOption ? parseFloat(selectedParkingOption.dataset.price) : 0;
 
+			// Calculate grand total
 			const grandTotal = packagePrice + hotelPrice + parkingPrice;
 			grandTotalElement.textContent = `PESO ${grandTotal.toFixed(2)}`;
 		}
@@ -365,6 +382,7 @@ if (isset($_POST['submit2'])) {
 		parkingSelect.addEventListener('change', updateGrandTotal);
 	});
 </script>
+
 
 
 
