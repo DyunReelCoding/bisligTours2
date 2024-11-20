@@ -3,7 +3,7 @@
 <div class="copy-right">
 	<div class="container">
 
-		<div class="ft-bg footer-social-icons wow fadeInDown animated animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInDown;">
+		<div class="footer-social-icons wow fadeInDown animated animated" data-wow-delay=".5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInDown;">
 			<ul>
 				<li><a class="facebook" href="#"><span>Facebook</span></a></li>
 			</ul>
