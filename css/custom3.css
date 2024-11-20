@@ -88,3 +88,9 @@
    margin-left: 10px;
    margin-bottom: 10px;
 } */
+
+.ft-bg {
+    background:#010101;
+    padding: 0.5em 0;
+	text-align:center;
+}
