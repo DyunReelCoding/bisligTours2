@@ -46,6 +46,7 @@ if (isset($_POST['submit2'])) {
 	<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
 	<link href="css/style.css" rel='stylesheet' type='text/css' />
 	<link href="css/custom3.css" rel='stylesheet' type='text/css' />
+	<link href="css/package.css" rel='stylesheet' type='text/css' />
 	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,600' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
@@ -357,24 +358,36 @@ if (isset($_POST['submit2'])) {
 
 <script>
 	document.addEventListener("DOMContentLoaded", () => {
-		const packagePrice = parseFloat(document.getElementById('packagePrice').value);
+		const packagePriceElement = document.getElementById('packagePrice');
 		const grandTotalElement = document.getElementById('grandTotal');
 		const hotelSelect = document.getElementById('hotelSelect');
 		const parkingSelect = document.querySelector('select[name="parking"]');
 
 		// Function to calculate and update the grand total
 		function updateGrandTotal() {
-			// Get selected hotel price
-			const selectedHotelOption = hotelSelect.options[hotelSelect.selectedIndex];
-			const hotelPrice = selectedHotelOption.dataset.price ? parseFloat(selectedHotelOption.dataset.price) : 0;
+			// Ensure packagePrice is a valid number
+			const packagePrice = parseFloat(packagePriceElement.value);
+			if (isNaN(packagePrice)) {
+				console.error("Package price is invalid.");
+				return; // Stop further calculation if package price is invalid
+			}
 
-			// Get the selected parking spot price (parkingSelect value can be used to get the price dynamically)
+			// Get selected hotel price, default to 0 if no hotel is selected
+			const selectedHotelOption = hotelSelect.options[hotelSelect.selectedIndex];
+			const hotelPrice = selectedHotelOption && selectedHotelOption.dataset.price ? parseFloat(selectedHotelOption.dataset.price) : 0;
+
+			// Get the selected parking spot price, default to 0 if no parking is selected
 			const selectedParkingOption = parkingSelect.options[parkingSelect.selectedIndex];
-			const parkingPrice = selectedParkingOption ? parseFloat(selectedParkingOption.dataset.price) : 0;
+			const parkingPrice = selectedParkingOption && selectedParkingOption.dataset.price ? parseFloat(selectedParkingOption.dataset.price) : 0;
 
 			// Calculate grand total
 			const grandTotal = packagePrice + hotelPrice + parkingPrice;
+
+			// Update the grand total display
 			grandTotalElement.textContent = `PESO ${grandTotal.toFixed(2)}`;
+
+			// Update the hotel price display
+			document.getElementById('hotelPrice').textContent = `Selected Hotel Price: PESO ${hotelPrice.toFixed(2)}`;
 		}
 
 		// Add event listeners to update the total dynamically
