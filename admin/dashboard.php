@@ -115,7 +115,7 @@ if (strlen($_SESSION['alogin']) == 0) {
 									<i class="glyphicon glyphicon-briefcase" aria-hidden="true"></i>
 								</div>
 								<div class="four-text">
-									<h3>Toatal packages</h3>
+									<h3>Total packages</h3>
 									<?php $sql3 = "SELECT PackageId from tbltourpackages";
 									$query3 = $dbh->prepare($sql3);
 									$query3->execute();
@@ -131,45 +131,24 @@ if (strlen($_SESSION['alogin']) == 0) {
 						<div class="clearfix"></div>
 					</div>
 
-					<div class="four-grids">
-						<div class="col-md-3 four-grid">
-							<div class="four-w3ls">
-								<div class="icon">
-									<i class="glyphicon glyphicon-folder-open" aria-hidden="true"></i>
-								</div>
-								<div class="four-text">
-									<h3>Issues Riaised</h3>
-									<?php $sql5 = "SELECT id from tblissues";
-									$query5 = $dbh->prepare($sql5);
-									$query5->execute();
-									$results5 = $query5->fetchAll(PDO::FETCH_OBJ);
-									$cnt5 = $query5->rowCount();
-									?>
-									<h4><?php echo htmlentities($cnt5); ?></h4>
 
-								</div>
-
-							</div>
-						</div>
-
-
-						<div class="clearfix"></div>
-					</div>
-					<!--//four-grids here-->
-
-
-					<div class="inner-block">
-
-					</div>
-					<!--inner block end here-->
-					<!--copy rights start here-->
-					<?php include('includes/footer.php'); ?>
+					<div class="clearfix"></div>
 				</div>
-			</div>
+				<!--//four-grids here-->
 
-			<!--/sidebar-menu-->
-			<?php include('includes/sidebarmenu.php'); ?>
-			<div class="clearfix"></div>
+
+				<div class="inner-block">
+
+				</div>
+				<!--inner block end here-->
+				<!--copy rights start here-->
+				<?php include('includes/footer.php'); ?>
+			</div>
+		</div>
+
+		<!--/sidebar-menu-->
+		<?php include('includes/sidebarmenu.php'); ?>
+		<div class="clearfix"></div>
 		</div>
 		<script>
 			var toggle = true;

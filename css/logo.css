@@ -1,0 +1,9 @@
+.logo a {
+    color: #84f852;
+    letter-spacing: 1px;
+    font-size: 2em;
+    font-weight: 400;
+    display: block;
+    text-decoration: none;
+    font-family: 'Oswald', sans-serif;
+}

@@ -7,7 +7,7 @@
 				<li class="prnt"><a href="package-list.php">Tour Package</a></li>
 				<li class="prnt"><a href="change-password.php">Change Password</a></li>
 				<li class="prnt"><a href="tour-history.php">My Tour History</a></li>
-				<li class="prnt"><a href="issuetickets.php">Issue Tickets</a></li>
+				<!-- <li class="prnt"><a href="issuetickets.php">Issue Tickets</a></li> -->
 			</ul>
 			<ul class="tp-hd-rgt wow fadeInRight animated" data-wow-delay=".5s">
 				<li class="tol">Welcome :</li>
@@ -29,7 +29,6 @@
 		<div class="top-header">
 			<div class="container">
 				<ul class="tp-hd-rgt wow fadeInRight animated" data-wow-delay=".5s">
-					<!-- <li class="tol">Toll Number : 123-4568790</li> -->
 					<li class="sig"><a href="#" data-toggle="modal" data-target="#myModal">Sign Up</a></li>
 					<li class="sigi"><a href="#" data-toggle="modal" data-target="#myModal4">/ Sign In</a></li>
 				</ul>
@@ -50,10 +49,6 @@
 					</a>
 				</div>
 				<div class="lock fadeInDown animated" data-wow-delay=".5s">
-					<!-- <li><i class="fa fa-lock"></i></li> -->
-					<!-- <li>
-						<div class="securetxt">SAFE &amp; SECURE </div>
-					</li> -->
 					<div class="clearfix"></div>
 				</div>
 				<div class="clearfix"></div>

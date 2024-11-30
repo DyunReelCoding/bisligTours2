@@ -93,6 +93,32 @@ if (isset($_POST['submit2'])) {
 	<!-- top-header -->
 	<?php include('includes/header.php'); ?>
 
+	<?php if ($msg) : ?>
+		<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="successModalLabel">Success</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<?php echo htmlentities($msg); ?>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(document).ready(function() {
+				$('#successModal').modal('show');
+			});
+		</script>
+	<?php endif; ?>
+
 	<!--- /banner ---->
 	<!--- selectroom ---->
 	<div class="selectroom">
@@ -135,7 +161,7 @@ if (isset($_POST['submit2'])) {
 									<br>
 									<label class="inputLabel">Number of Customers</label>
 									<input type="number" id="numCustomers" placeholder="Enter number of customers" min="1" required="">
-									<button type="button" onclick="generateCustomerInputs()">Confirm</button>
+									<button type="button" onclick="generateCustomerInputs()" style="display: none;">Confirm</button>
 								</div>
 								<div class="clearfix"></div>
 								<br>
@@ -241,160 +267,114 @@ if (isset($_POST['submit2'])) {
 		<?php include('includes/write-us.php'); ?>
 
 		<script>
-			function updateHotelPrice() {
-				const hotelSelect = document.getElementById("hotelSelect");
-				const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+			document.addEventListener("DOMContentLoaded", () => {
+				const packagePriceElement = document.getElementById('packagePrice');
+				const grandTotalElement = document.getElementById('grandTotal');
+				const hotelSelect = document.getElementById('hotelSelect');
+				const parkingSelect = document.querySelector('select[name="parking"]');
+				const numCustomersInput = document.getElementById('numCustomers');
+				const customerInputsContainer = document.getElementById('customerInputs');
 
-				// If the placeholder is selected, return early
-				if (selectedOption.value === "") {
-					return; // Do not update the hotel price if no hotel is selected
+				// Function to update the hotel price
+				function updateHotelPrice() {
+					const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
+					const hotelPrice = selectedOption.dataset.price ? parseFloat(selectedOption.dataset.price) : 0;
+					document.getElementById('hotelPrice').textContent = `Selected Hotel Price: PESO ${hotelPrice.toFixed(2)}`;
+					updateGrandTotal();
 				}
 
-				const hotelPrice = parseFloat(selectedOption.getAttribute("data-price"));
-
-				// Set hidden fields for hotel ID and price
-				document.getElementById("selectedHotelId").value = selectedOption.value;
-				document.getElementById("selectedHotelPrice").value = hotelPrice.toFixed(2);
-
-				// Update grand total calculation
-				const numCustomers = parseInt(document.getElementById("numCustomers").value);
-				const packagePrice = parseFloat(document.getElementById("packagePrice").value); // Get package price
-
-				// Calculate the total price with fixed hotel cost
-				const grandTotal = (packagePrice * numCustomers) + hotelPrice; // Hotel price is added only once
-				document.getElementById("grandTotal").innerText = "PESO " + grandTotal.toFixed(2);
-			}
-
-			function generateCustomerInputs() {
-				const container = document.getElementById("customerInputs");
-				const numCustomers = parseInt(document.getElementById("numCustomers").value);
-				const packagePrice = parseFloat(document.getElementById("packagePrice").value); // Get package price
-				const hotelSelect = document.getElementById("hotelSelect");
-				const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
-
-				// If no hotel is selected, hotelPrice should be 0
-				const hotelPrice = selectedOption.value === "" ? 0 : parseFloat(selectedOption.getAttribute("data-price"));
-
-				// Clear previous inputs
-				container.innerHTML = "";
-
-				if (isNaN(numCustomers) || numCustomers <= 0) {
-					alert("Please enter a valid number of customers.");
-					return;
+				// Function to update the parking price
+				function updateParkingPrice() {
+					const selectedOption = parkingSelect.options[parkingSelect.selectedIndex];
+					const parkingPrice = selectedOption.dataset.price ? parseFloat(selectedOption.dataset.price) : 0;
+					document.getElementById('parkingPrice').textContent = `Selected Parking Price: PESO ${parkingPrice.toFixed(2)}`;
+					updateGrandTotal();
 				}
 
-				// Create customer inputs dynamically
-				for (let i = 1; i <= numCustomers; i++) {
-					const inputDiv = document.createElement("div");
-					inputDiv.className = "customer-input";
-					inputDiv.innerHTML =
-						`<label>Customer ${i} Name</label>
-						<input type="text" name="customer${i}Name" placeholder="Enter name of customer ${i}" required="">`;
-					container.appendChild(inputDiv);
+				// Function to calculate and update the grand total
+				function updateGrandTotal() {
+					const packagePrice = parseFloat(packagePriceElement.value) || 0;
+					const hotelPrice = parseFloat(hotelSelect.options[hotelSelect.selectedIndex].dataset.price) || 0;
+					const parkingPrice = parseFloat(parkingSelect.options[parkingSelect.selectedIndex].dataset.price) || 0;
+					const numCustomers = parseInt(numCustomersInput.value) || 0;
+
+					const grandTotal = (packagePrice * numCustomers) + hotelPrice + parkingPrice;
+					grandTotalElement.textContent = `PESO ${grandTotal.toFixed(2)}`;
 				}
 
-				// Calculate and update grand total
-				const grandTotal = (packagePrice * numCustomers) + hotelPrice; // Hotel price is added only once
-				document.getElementById("grandTotal").innerText = "PESO " + grandTotal.toFixed(2);
-			}
+				// Function to dynamically generate customer input fields
+				function generateCustomerInputs() {
+					const numCustomers = parseInt(numCustomersInput.value);
+					const packagePrice = parseFloat(packagePriceElement.value) || 0;
+					const hotelPrice = parseFloat(hotelSelect.options[hotelSelect.selectedIndex].dataset.price) || 0;
+
+					if (isNaN(numCustomers) || numCustomers <= 0) {
+						alert("Please enter a valid number of customers.");
+						return;
+					}
+
+					// Clear previous inputs
+					customerInputsContainer.innerHTML = "";
+
+					// Create input fields for each customer
+					for (let i = 1; i <= numCustomers; i++) {
+						const inputDiv = document.createElement("div");
+						inputDiv.className = "customer-input";
+						inputDiv.innerHTML = `
+                    <label>Customer ${i} Name</label>
+                    <input type="text" name="customer${i}Name" placeholder="Enter name of customer ${i}" required>
+                `;
+						customerInputsContainer.appendChild(inputDiv);
+					}
+
+					// Update the grand total after generating customer inputs
+					updateGrandTotal();
+				}
+
+				// Function to validate form inputs before submission
+				function validateForm() {
+					const numCustomers = parseInt(numCustomersInput.value);
+
+					if (isNaN(numCustomers) || numCustomers <= 0) {
+						alert("Please confirm the number of customers.");
+						return false;
+					}
+
+					for (let i = 1; i <= numCustomers; i++) {
+						const customerInput = document.querySelector(`input[name="customer${i}Name"]`);
+						if (!customerInput || customerInput.value.trim() === "") {
+							alert(`Please fill out the name for Customer ${i}.`);
+							return false;
+						}
+					}
+
+					// Validate hotel and parking selections
+					const hotelPrice = parseFloat(hotelSelect.options[hotelSelect.selectedIndex].dataset.price) || 0;
+					const parkingPrice = parseFloat(parkingSelect.options[parkingSelect.selectedIndex].dataset.price) || 0;
+
+					document.getElementById("selectedHotelId").value = hotelSelect.value || "";
+					document.getElementById("selectedHotelPrice").value = hotelPrice.toFixed(2);
+					document.getElementById("selectedParkingPrice").value = parkingPrice.toFixed(2);
+
+					return true;
+				}
+
+				// Event listeners for dynamic updates
+				hotelSelect.addEventListener('change', updateHotelPrice);
+				parkingSelect.addEventListener('change', updateParkingPrice);
+				numCustomersInput.addEventListener('input', generateCustomerInputs);
+
+				// Initialize total calculation
+				updateGrandTotal();
+			});
 		</script>
 
 
 </body>
-<script>
-	function updateHotelPrice() {
-		const hotelSelect = document.getElementById("hotelSelect");
-		const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
-		const price = selectedOption.getAttribute("data-price") || "-";
-		document.getElementById("hotelPrice").innerText = `Selected Hotel Price: ${price}`;
-	}
-
-	function updateParkingPrice() {
-		const parkingSelect = document.getElementById("parkingSelect");
-		const selectedOption = parkingSelect.options[parkingSelect.selectedIndex];
-		const price = selectedOption.getAttribute("data-price") || "-";
-		document.getElementById("parkingPrice").innerText = `Selected Parking Price: ${price}`;
-	}
-
-	function validateForm() {
-		// Check if the Confirm button was clicked and fields were generated
-		const confirmButton = document.querySelector('button[onclick="generateCustomerInputs()"]');
-		const customerFieldsGenerated = document.querySelector('input[name="customer1Name"]'); // Replace with a representative field
-
-		if (confirmButton && !customerFieldsGenerated) {
-			alert("Please click the Confirm button to generate customer fields.");
-			return false;
-		}
-
-		// Validate the number of customers
-		const numCustomers = parseInt(document.getElementById("numCustomers").value);
-		if (isNaN(numCustomers) || numCustomers <= 0) {
-			alert("Please confirm the number of customers.");
-			return false;
-		}
-
-		// Validate customer name inputs
-		for (let i = 1; i <= numCustomers; i++) {
-			const customerInput = document.querySelector(`input[name="customer${i}Name"]`);
-			if (!customerInput || customerInput.value.trim() === "") {
-				alert(`Please fill out the name for Customer ${i}.`);
-				return false;
-			}
-		}
-
-		// Confirm hotel selection is properly populated
-		const hotelSelect = document.getElementById("hotelSelect");
-		const selectedOption = hotelSelect.options[hotelSelect.selectedIndex];
-		const selectedHotelId = selectedOption.value;
-		const selectedHotelPrice = selectedOption.getAttribute("data-price");
-
-		document.getElementById("selectedHotelId").value = selectedHotelId || "";
-		document.getElementById("selectedHotelPrice").value = selectedHotelPrice || "0";
-
-		return true; // All checks passed
-	}
-</script>
 
 
-<script>
-	document.addEventListener("DOMContentLoaded", () => {
-		const packagePriceElement = document.getElementById('packagePrice');
-		const grandTotalElement = document.getElementById('grandTotal');
-		const hotelSelect = document.getElementById('hotelSelect');
-		const parkingSelect = document.querySelector('select[name="parking"]');
 
-		// Function to calculate and update the grand total
-		function updateGrandTotal() {
-			// Ensure packagePrice is a valid number
-			const packagePrice = parseFloat(packagePriceElement.value);
-			if (isNaN(packagePrice)) {
-				console.error("Package price is invalid.");
-				return; // Stop further calculation if package price is invalid
-			}
 
-			// Get selected hotel price, default to 0 if no hotel is selected
-			const selectedHotelOption = hotelSelect.options[hotelSelect.selectedIndex];
-			const hotelPrice = selectedHotelOption && selectedHotelOption.dataset.price ? parseFloat(selectedHotelOption.dataset.price) : 0;
-
-			// Get the selected parking spot price, default to 0 if no parking is selected
-			const selectedParkingOption = parkingSelect.options[parkingSelect.selectedIndex];
-			const parkingPrice = selectedParkingOption && selectedParkingOption.dataset.price ? parseFloat(selectedParkingOption.dataset.price) : 0;
-
-			// Calculate grand total
-			const grandTotal = packagePrice + hotelPrice + parkingPrice;
-
-			// Update the grand total display
-			grandTotalElement.textContent = `PESO ${grandTotal.toFixed(2)}`;
-
-			// Update the hotel price display
-			document.getElementById('hotelPrice').textContent = `Selected Hotel Price: PESO ${hotelPrice.toFixed(2)}`;
-		}
-
-		// Add event listeners to update the total dynamically
-		hotelSelect.addEventListener('change', updateGrandTotal);
-		parkingSelect.addEventListener('change', updateGrandTotal);
-	});
-</script>
 
 
 
